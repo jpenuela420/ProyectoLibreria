@@ -18,7 +18,7 @@ class Usuario:
         self.correo = correo
         self.reservas: int = 3
         self.libro: Libro
-        self.mis_libros: list[dict] = dict["titulo": Libro]
+        self.mis_libros: list[dict] = dict[str: Libro]
 
     def registrar_usuario(self, usuario: str, password: str):
         self.__class__.lista_usuarios.append(usuario)
@@ -29,6 +29,8 @@ class Usuario:
         for i in self.__class__.lista_passwords:
             if usuario == self.__class__.lista_usuarios[i] and password == self.__class__.lista_passwords[i]:
                 return True
+            else:
+                return False
 
     def iniciar_sesion(self, usuario: str, password: str) -> bool:
         inicio_de_sesion = self.verificar_sesion(usuario, password)
