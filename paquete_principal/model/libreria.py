@@ -1,3 +1,9 @@
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import datetime
+
+
 class Contenido:
     def __init__(self, sinopsis: str, analisis_ia: str):
         self.sinopsis = sinopsis
@@ -82,5 +88,43 @@ class Biblioteca:
         if self.usuario.reservas > 0:
             if self.verificar_disponibilidad(titulo):
                 self.usuario.mis_libros[self.libro.titulo] = self.libro
+                self.reservar_libro_correo(self.libro, self.usuario, self.usuario.correo)
+                self.usuario.reservas -= 1
         else:
             print(f"El usuario no tiene reservas disponibles")
+
+    def enviar_correo(self, destinatario, asunto, mensaje):
+        servidor_smtp = 'smtp.gmail.com'
+        puerto_smtp = 587
+        remitente = 'tomatolibraryeduco@gmail.com'
+        password = 'ngjq zhsg zbhn clso'
+
+        msg = MIMEMultipart()
+        msg['From'] = remitente
+        msg['To'] = destinatario
+        msg['Subject'] = asunto
+
+        # Adjunta el mensaje al cuerpo del correo
+        msg.attach(MIMEText(mensaje, 'plain'))
+
+        servidor = smtplib.SMTP(host=servidor_smtp, port=puerto_smtp)
+        servidor.starttls()
+        servidor.login(remitente, password)
+
+        servidor.send_message(msg)
+        servidor.quit()
+
+    def reservar_libro_correo(self, libro, usuario, correo_usuario):
+        tiempo_devolucion = datetime.datetime.now() + datetime.timedelta(days=10)
+        mensaje = f"¡Hola {usuario}!\n\nHas reservado el libro '{libro}'.\n\nPor favor, devuélvelo antes de: {tiempo_devolucion}"
+        self.enviar_correo(correo_usuario, "Reserva de libro", mensaje)
+
+    def libro_disponible(self, libro, usuario, correo_usuario):
+        mensaje = f"¡Hola {usuario}!\n\nEl libro '{libro}' que estabas esperando ya está disponible para su reserva."
+        self.enviar_correo(correo_usuario, "Libro disponible", mensaje)
+
+        libro_devuelto = "" #Aqui se almacena el nombre del libro devuelto
+        usuarios_esperando = []  #Esta lista va a contener los correos de las personas que asignaron un libro a la lista de favoritos
+
+        for usuario, correo_usuario in usuarios_esperando:
+            self.libro_disponible(libro_devuelto, usuario, correo_usuario)
