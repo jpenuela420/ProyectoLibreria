@@ -77,8 +77,11 @@ class Biblioteca:
         return f"Los libros resultado de tu busqueda son: {resultado}"
 
     def agregar_disponible(self):
-        self.libros = {self.libro.titulo: self.libro for self.libro in range(len(self.libro))}
-        print(self.libros)
+        self.libros = {self.libro.titulo: self.libro for self.libro in self.libro}
+        self.__str__()
+
+    def __str__(self):
+        return f"Los libros disponibles son: {self.libros}"
 
     def verificar_disponibilidad(self, titulo_libro: str):
         if titulo_libro in self.libros_disponibles.values():
