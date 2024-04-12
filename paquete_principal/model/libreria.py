@@ -20,8 +20,8 @@ class Libro:
 
 
 class Usuario:
-    lista_usuarios = []
-    lista_passwords = []
+    lista_usuarios: list[str] = []
+    lista_passwords: list[str] = []
 
     def __init__(self, nombre: str, correo: str):
         self.nombre = nombre
@@ -33,23 +33,27 @@ class Usuario:
     def registrar_usuario(self, usuario: str, password: str):
         self.__class__.lista_usuarios.append(usuario)
         self.__class__.lista_passwords.append(password)
+        print("El usuario se ha registrado exitosamente")
+        return
 
     def verificar_sesion(self, usuario: str, password: str) -> bool:
-        for i in self.__class__.lista_passwords:
+        for i in range(len(self.__class__.lista_passwords)):
             if usuario == self.__class__.lista_usuarios[i] and password == self.__class__.lista_passwords[i]:
+                print(f"La sesion se ha verificado correctamente")
                 return True
             else:
+                print(f"La sesion no se ha iniciado")
                 return False
 
-    def iniciar_sesion(self, usuario: str, password: str) -> bool:
+    def iniciar_sesion(self, usuario: str, password: str):
         inicio_de_sesion = self.verificar_sesion(usuario, password)
         return inicio_de_sesion
 
 
 class Biblioteca:
-    def __init__(self, libro: Libro, usuario: Usuario):
-        self.libro = libro
-        self.libros: dict[str, libro] = {}
+    def __init__(self, libros: list[Libro], usuario: Usuario):
+        self.libro = libros
+        self.libros: dict[str, libros] = {}
         self.usuario = usuario
         self.libros_disponibles: dict[str, Libro] = {}
 
@@ -73,7 +77,8 @@ class Biblioteca:
         return f"Los libros resultado de tu busqueda son: {resultado}"
 
     def agregar_disponible(self):
-        self.libros = {self.libro.titulo: self.libro for self.libro in range(10)}
+        self.libros = {self.libro.titulo: self.libro for self.libro in range(len(self.libro))}
+        print(self.libros)
 
     def verificar_disponibilidad(self, titulo_libro: str):
         if titulo_libro in self.libros_disponibles.values():
@@ -87,7 +92,7 @@ class Biblioteca:
     def reservar_libro(self, titulo: str):
         if self.usuario.reservas > 0:
             if self.verificar_disponibilidad(titulo):
-                self.usuario.mis_libros[self.libro.titulo] = self.libro
+                self.usuario.mis_libros[self.libros.titulo] = self.libro
                 self.reservar_libro_correo(self.libro, self.usuario, self.usuario.correo)
                 self.usuario.reservas -= 1
         else:
