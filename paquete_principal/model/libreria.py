@@ -8,14 +8,14 @@ class Contenido:
     def __init__(self, sinopsis: str, analisis_ia: str):
         self.sinopsis = sinopsis
         self.analisis_ia = analisis_ia
+    # Esta clase no se ha implentado
 
 
 class Libro:
-    def __init__(self, titulo: str, nombre_autor: str, categoria: str, contenido: Contenido):
+    def __init__(self, titulo: str, nombre_autor: str, categoria: str):
         self.titulo = titulo
         self.nombre_autor = nombre_autor
         self.categoria = categoria
-        self.contenido = contenido
         self.disponible: bool = True
 
 
@@ -93,7 +93,8 @@ class Biblioteca:
         else:
             print(f"El usuario no tiene reservas disponibles")
 
-    def enviar_correo(self, destinatario, asunto, mensaje):
+    @staticmethod
+    def enviar_correo(destinatario, asunto, mensaje):
         servidor_smtp = 'smtp.gmail.com'
         puerto_smtp = 587
         remitente = 'tomatolibraryeduco@gmail.com'
